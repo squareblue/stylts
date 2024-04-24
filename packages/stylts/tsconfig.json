@@ -1,0 +1,15 @@
+{
+  "extends": "@local/config-typescript/base.json",
+  "compilerOptions": {
+    "isolatedModules": false,
+    "noImplicitAny": false,
+    "noEmit": true,
+    "outDir": "./dist"
+  },
+  "exclude": [
+    "**/dist/",
+    "**/node_modules/",
+    "vite.config.*",
+    "**/*-----*"
+  ]
+}

@@ -1,8 +1,8 @@
 /** @type {import("eslint").Linter.Config} */
-module.exports = {
+export default {
   root: true,
-  ignorePatterns: [".eslintrc.cjs"],
-  extends: ["@repo/eslint-config/index.js"],
+  ignorePatterns: [".eslintrc.*"],
+  extends: ["@local/config-eslint/index.js"],
   parser: "@typescript-eslint/parser",
   parserOptions: {
     project: true,

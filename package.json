@@ -1,5 +1,6 @@
 {
   "private": true,
+  "type": "module",
   "scripts": {
     "build": "turbo build",
     "dev": "turbo dev",
@@ -7,14 +8,19 @@
     "format": "prettier --write \"**/*.{ts,tsx,md}\""
   },
   "devDependencies": {
+    "@local/config-eslint": "*",
+    "@types/node": "^20.12.7",
     "eslint": "^8.57.0",
-    "@repo/eslint-config": "*",
     "prettier": "^3.2.5",
-    "turbo": "latest"
+    "turbo": "latest",
+    "typescript": "^5.4.5",
+    "vite": "^5.2.10",
+    "vitest": "^1.5.1"
   },
   "packageManager": "npm@10.5.0",
   "workspaces": [
-    "apps/*",
+    "demos/*",
+    "docs/*",
     "packages/*"
   ]
 }

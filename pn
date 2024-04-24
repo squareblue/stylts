@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+# Because 'pnpm' is too hard to type.
+pnpm "$@"

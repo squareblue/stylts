@@ -1,0 +1,35 @@
+{
+  "name": "stylts",
+  "version": "0.0.1",
+  "type": "module",
+  "main": "dist/stylts.cjs",
+  "module": "dist/stylts.js",
+  "exports": {
+    ".": {
+      "import": "./dist/stylts.js",
+      "require": "./dist/stylts.cjs"
+    },
+    "./utils": {
+      "import": "./dist/utils.js",
+      "require": "./dist/utils.cjs"
+    }
+  },
+  "types": "./dist",
+  "license": "MIT",
+  "scripts": {
+    "dev:disabled": "vite dev",
+    "build": "tsc && vite build",
+    "release:disabled": "pnpm test && pnpm build && changelogen --release --push && pnpm publish",
+    "lint:disabled": "eslint . --fix",
+    "test:disabled": "vitest --run",
+    "test:watch:disabled": "vitest",
+    "test:coverage:disabled": "vitest --coverage"
+  },
+  "devDependencies": {
+    "@local/config-eslint": "*",
+    "@local/config-typescript": "*",
+    "eslint": "^8.57.0",
+    "typescript": "^5.4.5",
+    "vite-plugin-dts": "^3.9.0"
+  }
+}
