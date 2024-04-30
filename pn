@@ -1,3 +1,4 @@
 #!/usr/bin/env bash
+# ./pn install # or whatever...
 # Because 'pnpm' is too hard to type.
 pnpm "$@"

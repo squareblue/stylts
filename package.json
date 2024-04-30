@@ -8,7 +8,7 @@
     "format": "prettier --write \"**/*.{ts,tsx,md}\""
   },
   "devDependencies": {
-    "@local/config-eslint": "*",
+    "@local/config-eslint": "workspace:*",
     "@types/node": "^20.12.7",
     "eslint": "^8.57.0",
     "prettier": "^3.2.5",
@@ -17,10 +17,11 @@
     "vite": "^5.2.10",
     "vitest": "^1.5.1"
   },
-  "packageManager": "npm@10.5.0",
-  "workspaces": [
-    "demos/*",
-    "docs/*",
-    "packages/*"
+  "packageManager": "pnpm@8.15.6",
+  "workspaces::disabled": [
+    "demos/**",
+    "docs",
+    "external",
+    "packages/**"
   ]
 }
