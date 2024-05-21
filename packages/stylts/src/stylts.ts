@@ -1,13 +1,15 @@
 import { camelCase, kebabCase } from 'change-case';
-import type {
+import {
   Properties,
   PropertiesHyphen,
+  Property,
   VendorProperties,
   VendorPropertiesHyphen,
 } from 'csstype';
 // import type { AnyObject, Whatever } from './utils';
 import * as utils from './utils';
 import * as properties from './properties';
+import { px } from './units';
 
 export { utils, properties };
 
@@ -43,9 +45,9 @@ export type StyltsArgs = [
   (StyltsPresets | undefined)
 ]
 
-// function numericStyleValue(n: string | number | unknown): string {
-//   return typeof n === 'number' ? px(n) : String(n);
-// }
+function numericStyleValue(n: string | number | unknown): string {
+  return typeof n === 'number' ? px(n) : String(n);
+}
 //
 // function numericValues(n: string | NumericValue | NumericValue[]) {
 //   const out: string[] = [];
@@ -59,12 +61,12 @@ export type StyltsArgs = [
 //   return { margin: numericValues(value as NumericValue | NumericValue[]) as Property.Margin };
 // }
 //
-// export function mX(n: number | string) {
-//   return {
-//     marginLeft: numericStyleValue(n) as Property.MarginLeft,
-//     marginRight: numericStyleValue(n) as Property.MarginRight,
-//   };
-// }
+export function mX(n: number | string) {
+  return {
+    marginLeft: numericStyleValue(n) as Property.MarginLeft,
+    marginRight: numericStyleValue(n) as Property.MarginRight,
+  };
+}
 //
 // export function mY(n: number | string) {
 //   return {

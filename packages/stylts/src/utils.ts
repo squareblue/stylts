@@ -43,6 +43,22 @@ export type NumericStringIsLength<
   N extends number,
 > = NumericValueLength<S> extends N ? true : false;
 
+type Enumerate<N extends number, Acc extends number[] = []> =
+  Acc['length'] extends N
+    ? Acc[number]
+    : Enumerate<N, [...Acc, Acc['length']]>
+
+export type NumberRange<F extends number, T extends number> = Exclude<Enumerate<T>, Enumerate<F>> | T;
+
+export type ComputeRange<N extends number, Result extends Array<unknown> = []> =
+  Result['length'] extends N
+    ? Result
+    : ComputeRange<N, [ ...Result, Result['length'] ]>
+
+export type HexLetter = 'A' | 'a' | 'B' | 'b' | 'C' | 'c' | 'D' | 'd' | 'E' | 'e' | 'F' | 'f';
+export type HexNumber = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9;
+export type HexChar = HexLetter | HexNumber;
+
 export type AnyObject = {
   [key: string]: Whatever;
 }
@@ -55,8 +71,10 @@ export function objectType(obj: unknown): string {
   return Object.prototype.toString.call(obj);
 }
 
+const objectObject = objectType({});
+
 export function isPlainObject(obj: unknown): boolean {
-  return objectType(obj) === '[object Object]';
+  return objectType(obj) === objectObject;
 }
 
 export function possiblyJSON(value: unknown): boolean {
@@ -147,7 +165,7 @@ export function randomChars(len: CharLength = 8) {
 export function randomString(len = 8, prefix = '') {
   let str = prefix || '';
   while (str.length < len) {
-    str += randomChars(len as CharLength)
+    str += randomChars(len as CharLength);
   }
   return str;
 }
@@ -162,11 +180,11 @@ export function randomId(opts) {
     sep = '-',
   } = opts;
 
-  let idParts: string[] = [prefix];
+  let idParts: string[] = [ prefix ];
   let count = 0;
 
   while (++count <= parts) {
-    idParts.push(randomString(partLength as CharLength))
+    idParts.push(randomString(partLength as CharLength));
   }
 
   console.log(idParts);
@@ -177,9 +195,32 @@ export function randomId(opts) {
 export function toPath(path: string, obj = {}, value = {}) {
   const parts = path.split('.');
   const last = parts.pop() as string;
-  const out = {...obj}
+  const out = { ...obj };
   parts.reduce((o, k) => {
-    return o[k] = {...o[k]};
+    if (o[k] == null) return o[k] = {};
+    // else...
+    return o[k] = isPlainObject(o[k]) ? o[k] : { _: o[k] };
   }, out)[last] = value;
   return out;
+}
+
+export function dotPath(path: string, obj: AnyObject, value: any) {
+  let out = obj;
+  let parts = String(path).split('.');
+  let isLast = false;
+  parts.forEach((k, i) => {
+    if ((isLast = (i < parts.length - 1))) {
+      if (out[k] == null) {
+        out[k] = {};
+      } else if (!isPlainObject(out[k])) {
+        out[k] = { _: out[k] };
+      } else {
+        out[k] = out[k];
+      }
+      out = out[k] as AnyObject;
+    } else {
+      out[k] = value;
+    }
+  });
+  return obj;
 }

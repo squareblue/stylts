@@ -37,16 +37,6 @@ const displayValueList = [
   'unset',
 ] as const;
 
-// Generate new object using camelCase version of value as the property name
-// export const displayValuesComputed = {
-//   ...displayValueList.reduce((list, value) => {
-//     Object.assign(list, {
-//       [camelCase(value)]: value,
-//     });
-//     return list;
-//   }, {}),
-// } as const;
-
 const displayValues = {
   // display: 'initial' as Property.Display,
   block: 'block',
@@ -75,21 +65,7 @@ const displayValues = {
   unset: 'unset',
 } as const;
 
-type DisplayValueKey = keyof typeof displayValues;
-
-type DisplayValues = {
-  [k in DisplayValueKey]: typeof displayValues[k];
-};
-
-type DisplayPropertyValue =
-  | Property.Display
-  | typeof displayValueList[number]
-
-export const displayFn = (value: Property.Display) => ({
-  display: value,
-});
-
-const displayProperties = {
+const displayStyle = {
   set: (value: Property.Display) => ({ display: value }),
   block: { display: 'block' },
   blockFlex: { display: 'block flex' },
@@ -117,20 +93,62 @@ const displayProperties = {
   unset: { display: 'unset' },
 } as const;
 
-type DisplayProperty = keyof typeof displayProperties;
+type DisplayProperty = keyof typeof displayStyle;
 
 type DisplayProperties = {
-  [k in DisplayProperty]: typeof displayProperties[k];
+  [k in DisplayProperty]: typeof displayStyle[k];
 }
 
-export const display = {
-  // set: displayFn,
-  ...displayProperties,
+type DisplayPropertyValue =
+  | typeof displayValueList[number]
+  | Property.Display
+
+// type DisplayReturnValue = {
+//   display: DisplayPropertyValue
+// }
+
+class DisplayStyle {
+  block = 'block';
+  blockFlex = 'block flex';
+  blockFlow = 'block flow';
+  blockFlowRoot = 'block flow-root';
+  blockGrid = 'block grid';
+  contents = 'contents';
+  flex = 'flex';
+  flowRoot = 'flow-root';
+  grid = 'grid';
+  inherit = 'inherit';
+  initial = 'initial';
+  inline = 'inline';
+  inlineBlock = 'inline-block';
+  inlineFlex = 'inline flex';
+  inlineFlow = 'inline flow';
+  inlineFlowRoot = 'inline flow-root';
+  inlineGrid = 'inline grid';
+  inlineTable = 'inline table';
+  listItem = 'list-item';
+  none = 'none';
+  revert = 'revert';
+  revertLayer = 'revert-layer';
+  table = 'table';
+  tableRow = 'table-row';
+  unset = 'unset';
+  constructor() {}
 }
+
+export function display(value: DisplayPropertyValue) {
+  return {
+    display: value
+  }
+}
+
+display.style = {
+  ...displayStyle
+};
 
 // Add `displayValues` properties to `display()` function
-// Object.assign(display, displayProperties);
-// for (const [ key, value ] of Object.entries(displayProperties)) {
+// Object.assign(display, displayStyle);
+// for (const [ key, value ] of Object.entries(displayStyle)) {
 //   display[key] = {
 //     display: value,
 //   };

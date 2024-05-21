@@ -2,7 +2,7 @@ import { camelCase } from 'change-case';
 import { Properties, Property, StandardProperties, StandardShorthandProperties } from 'csstype';
 import { em, px, rem } from './units';
 import { AnyObject, arrayConcat, NumericValue, Whatever } from './utils';
-// import { type DisplayProperties, display } from './properties/display';
+import { display } from './properties/display';
 
 function numericStyleValue(n: string | number | unknown): string {
   return typeof n === 'number' ? px(n) : String(n);
@@ -13,7 +13,7 @@ function numericValues(n: string | NumericValue | NumericValue[]) {
   for (const value of arrayConcat(n)) {
     out.push(numericStyleValue(value));
   }
-  return out.join(' ');
+  return out.join(' ').trim();
 }
 
 // Hold preset values, using syntax similar to Tailwind(?)
@@ -40,26 +40,26 @@ flex.display = {
 };
 
 flex.row = {
-  ...flex.display,
-  flexDirection: 'row',
-};
+  display: 'flex',
+  flexDirection: 'row'
+}
 
 flex.col = flex.column = {
-  ...flex.display,
+  display: 'flex',
   flexDirection: 'column',
 };
 
 flex.center = {
   x: {
-    ...flex.col,
+    display: 'flex',
     alignItems: 'center',
   },
   y: {
-    ...flex.row,
+    display: 'flex',
     alignItems: 'center',
   },
   xy: {
-    ...flex.display,
+    display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -72,72 +72,73 @@ flex.center = {
 // ============================================================
 // Margins
 // ------------------------------------------------------------
-export const m = (value: string | number | (string | number)[]) => ({
+export const mgn = (value: string | number | (string | number)[]) => ({
   margin: numericValues(value as NumericValue | NumericValue[]) as Property.Margin,
 });
-export const margin = m;
+export const m = mgn;
+export const margin = mgn;
 
 // Horizontal margin
-type MarginX = number | string | (Property.MarginLeft | Property.MarginRight);
+type MarginX = number | string | Property.MarginLeft | [Property.MarginLeft,  Property.MarginRight?];
 // ...
-export const mX = (n: MarginX | MarginX[]) => {
-  const [ L, R ] = arrayConcat(n);
+export const mx = (n: MarginX | MarginX[]) => {
+  const [ left, right ] = arrayConcat(n);
   return ({
-    marginLeft: numericStyleValue(L) as Property.MarginLeft,
-    marginRight: numericStyleValue(R || L) as Property.MarginRight,
+    marginLeft: numericStyleValue(left) as Property.MarginLeft,
+    marginRight: numericStyleValue(right || left) as Property.MarginRight,
   });
 };
 // Add as method om 'm'
-m.x = mX;
+mgn.x = mx;
 
 // Vertical margin
-type MarginY = number | string | [(Property.MarginTop | Property.MarginBottom)];
+type MarginY = number | string | [Property.MarginTop | Property.MarginBottom];
 
 /**
  * @example
  * mY(5) // -> margin-top:5px;margin-bottom:5px;
  * my([5, 10]) // -> margin-top:5px;margin-bottom:10px;
  */
-export const mY = (n: MarginY | MarginY[]) => {
-  const [ T, B ] = arrayConcat(n);
+export const my = (n: MarginY | MarginY[]) => {
+  const [ top, bottom ] = arrayConcat(n);
   return ({
-    marginTop: numericStyleValue(T),
-    marginBottom: numericStyleValue(B || T),
+    marginTop: numericStyleValue(top),
+    marginBottom: numericStyleValue(bottom || top),
   });
 };
-m.y = mY;
+mgn.y = my;
 
-export const mR = (n: number | string | Property.MarginRight) => ({
+export const mr = (n: number | string | Property.MarginRight) => ({
   marginRight: numericStyleValue(n) as Property.MarginRight,
 });
-m.r = mR;
+mgn.r = mr;
 // margin-right presets
-m.r1 = mR(rem(0.25));
-m.r2 = mR(rem(0.5));
-m.r3 = mR(rem(0.75));
-m.r4 = mR(rem(1));
-export const MR4 = mR(rem(0.25));
-export const MR8 = mR(rem(0.5));
-export const MR16 = mR(rem(1));
+mgn.r1 = mr(rem(0.25));
+mgn.r2 = mr(rem(0.5));
+mgn.r3 = mr(rem(0.75));
+mgn.r4 = mr(rem(1));
+export const MR4 = mr(rem(0.25));
+export const MR8 = mr(rem(0.5));
+export const MR16 = mr(rem(1));
 
-export const mL = (n: number | string | Property.MarginLeft) => ({
+export const ml = (n: number | string | Property.MarginLeft) => ({
   marginLeft: numericStyleValue(n) as Property.MarginLeft,
 });
-m.l = mL;
+mgn.l = ml;
 // margin-left presets
-export const ML4 = mL(rem(0.25));
-export const ML8 = mL(rem(0.5));
-export const ML16 = mL(rem(1));
+export const ML4 = ml(rem(0.25));
+export const ML8 = ml(rem(0.5));
+export const ML16 = ml(rem(1));
 
-export const mT = (n: number | string | Property.MarginTop) => ({
+export const mt = (n: number | string | Property.MarginTop) => ({
   marginTop: numericStyleValue(n) as Property.MarginTop,
 });
-m.t = mT;
+mgn.t = mt;
 
-export const mB = (n: number | string | Property.MarginBottom) => ({
+export const mb = (n: number | string | Property.MarginBottom) => ({
   marginBottom: numericStyleValue(n) as Property.MarginBottom,
 });
-m.b = mB;
+mgn.b = mb;
 
 export const m0 = () => ({
   marginLeft: '0',
@@ -145,39 +146,60 @@ export const m0 = () => ({
   marginTop: '0',
   marginBottom: '0',
 });
-m.x0 = m0();
+mgn.x0 = m0();
 
-export const mAuto = () => ({
+type MAutoArgs = 'left' | 'right' | 'bottom' | 'top' | 'all' | 'none';
+
+export const mgnAuto = (which = 'all') => ({
   marginLeft: 'auto',
   marginRight: 'auto',
   marginTop: 'auto',
   marginBottom: 'auto',
 });
-m.auto = mAuto();
+
+mgn.auto = {
+  xy: {
+    marginLeft: 'auto',
+    marginRight: 'auto',
+    marginTop: 'auto',
+    marginBottom: 'auto',
+  },
+  x: {
+    marginLeft: 'auto',
+    marginRight: 'auto',
+  },
+  y: {
+    marginTop: 'auto',
+    marginBottom: 'auto',
+  },
+  t: {
+    marginTop: 'auto',
+  }
+} as const;
 
 export const mAutoX = () => ({
   marginLeft: 'auto',
   marginRight: 'auto',
 });
-m.autoX = mAutoX();
+mgn.autoX = mAutoX();
 
-export const mAutoY = () => ({
+export const mAutoY = {
   marginTop: 'auto',
   marginBottom: 'auto',
-});
-m.autoY = mAutoY();
+};
+mgn.autoY = mAutoY;
 
 // Margin presets / shortcuts
 Object.assign(presets, {
   m: {
-    // x: mX,
-    // y: mY,
-    // l: mL,
-    // r: mR,
-    x0: mX(0),
-    y0: mY(0),
-    l0: mL(0),
-    r0: mR(0),
+    // x: mx,
+    // y: my,
+    // l: ml,
+    // r: mr,
+    x0: mx(0),
+    y0: my(0),
+    l0: ml(0),
+    r0: mr(0),
   },
 });
 
@@ -185,34 +207,36 @@ Object.assign(presets, {
 // ============================================================
 // Padding
 // ------------------------------------------------------------
-export function p(value: NumericValue | NumericValue[]) {
+export function pad(value: NumericValue | NumericValue[]) {
   return { padding: numericValues(value) as Property.Padding };
 }
-export const padding = p;
+export const p = pad;
+export const pdg = pad;
+export const padding = pad;
 
-export function pY(n: number | string) {
-  return {
-    paddingTop: numericStyleValue(n) as Property.PaddingTop,
-    paddingBottom: numericStyleValue(n) as Property.PaddingBottom,
-  };
-}
-p.y = pY;
-
-export function pX(n: number | string) {
+export function padx(n: number | string) {
   return {
     paddingLeft: numericStyleValue(n) as Property.PaddingLeft,
     paddingRight: numericStyleValue(n) as Property.PaddingRight,
   };
 }
-p.x = pX;
+pad.x = padx;
+
+export function pady(n: number | string) {
+  return {
+    paddingTop: numericStyleValue(n) as Property.PaddingTop,
+    paddingBottom: numericStyleValue(n) as Property.PaddingBottom,
+  };
+}
+pad.y = pady;
 
 
 // PRESETS
 Object.assign(presets, {
   m: {
-    x0: mX(0),
-    y0: mY(0),
-    r0: mR(0),
+    x0: mx(0),
+    y0: my(0),
+    r0: mr(0),
   },
 });
 

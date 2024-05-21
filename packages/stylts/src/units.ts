@@ -1,11 +1,14 @@
 /**
  * Functions for setting numeric values with unit suffix
  */
-import { arrayConcat } from './utils';
+import { arrayConcat, NumberRange } from './utils';
 import type {
+  ComputeRange,
   // NumericStringIsLength,
   NumericValue,
 } from './utils';
+import { Property } from 'csstype';
+import Float = Property.Float;
 
 let undef: undefined;
 
@@ -33,8 +36,8 @@ export function toUnit(value: UnitValues, unit: (UnitType | never) = ''): string
   return arrayConcat(value).join(suffix + ' ') + suffix;
 }
 
-export const pt = (...value: UnitValues) => toUnit(value, 'pt');
 export const px = (...value: UnitValues) => toUnit(value, 'px');
+export const pt = (...value: UnitValues) => toUnit(value, 'pt');
 export const em = (...value: UnitValues) => toUnit(value, 'em');
 export const rem = (...value: UnitValues) => toUnit(value, 'rem');
 export const vh = (...value: UnitValues) => toUnit(value, 'vh');
@@ -43,12 +46,69 @@ export const lh = (...value: UnitValues) => toUnit(value, 'lh');
 export const rlh = (...value: UnitValues) => toUnit(value, 'rlh');
 export const pct = (...value: UnitValues) => toUnit(value, '%');
 
-vh.full = '100vh';
-vw.full = '100vw';
-lh.x1 = '1lh';
-rlh.x1 = '1rlh';
-pct.full = '100%';
-pct.x100 = '100%';
+class Unit {
+  value: UnitValues;
+
+  constructor(...value: UnitValues) {
+    this.value = value;
+  }
+
+  get px() {
+    return px(...this.value);
+  }
+
+  get pt() {
+    return pt(...this.value);
+  }
+
+  get em() {
+    return em(...this.value);
+  }
+
+  get rem() {
+    return rem(...this.value);
+  }
+
+  get vh() {
+    return vh(...this.value);
+  }
+
+  get vw() {
+    return vw(...this.value);
+  }
+
+  get lh() {
+    return lh(...this.value);
+  }
+
+  get rlh() {
+    return rlh(...this.value);
+  }
+
+  get pct() {
+    return pct(...this.value);
+  }
+
+  static $0 = new Unit(0);
+  static $100 = new Unit(100);
+  static full = Unit.$100;
+}
+
+export function unit(...value: UnitValues) {
+  return new Unit(...value);
+}
+
+px.x0 = px(0);
+px.x5 = px(5);
+px.x10 = px(10);
+px.x20 = px(20);
+px.x40 = px(40);
+
+vh.full = vh(100);
+vw.full = vw(100);
+lh.x1 = lh(1);
+rlh.x1 = rlh(1);
+pct.full = pct.x100 = pct(100);
 
 function getLength(value: unknown): number {
   try {
@@ -77,10 +137,10 @@ function stripHex(value: NumericValue): string {
 //   return stripHex(value).length;
 // }
 
-function getHex(value: NumericValue): [string, number] {
+function parseHex(value: NumericValue): [ string, number ] {
   const val = stripHex(value);
   const len = val.length;
-  return [val, len];
+  return [ val, len ];
 }
 
 // function isHexFull(value: NumericValue): boolean {
@@ -109,12 +169,11 @@ function getHex(value: NumericValue): [string, number] {
  * @param value
  */
 export function toHex(value: NumericValue): string {
-  const [val, len] = getHex(value);
+  const [ val, len ] = parseHex(value);
   switch (len) {
     case 6:
-      return `#${value}`;
     case 3:
-      return `#` + val + val;
+      return `#${value}`;
     case 2:
       return `#` + val + val + val;
     case 1:
@@ -122,24 +181,44 @@ export function toHex(value: NumericValue): string {
     case 4:
     case 5:
     default:
-      console.error(``)
+      console.error(`Invalid hex value: ${val}`);
   }
   return val;
 }
 
-type RGBArgs = CSSNumericValue | NumericValue;
+type RGBRange = NumberRange<0, 255>
+type RGBValues = [RGBRange, RGBRange, RGBRange];
+type RGBAValues = [RGBRange, RGBRange, RGBRange, number];
 
-export function rgb(r, g, b) {
+// type MAXIMUM_ALLOWED_BOUNDARY = 256
+// type Octal = ComputeRange<MAXIMUM_ALLOWED_BOUNDARY>[number]; // 0 - 255
+// type Digits = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9;
+// type AlphaChanel = (`0.${ComputeRange<999>[number]}` | '1.0');
+// type AssertAlpha<Alpha extends number> = `${Alpha}` extends AlphaChanel ? Alpha : never;
+
+export function rgb(...rgb: RGBValues) {
+  const [ r, g, b ] = rgb;
   return `rgb(${r}, ${g}, ${b})`;
+}
+
+export function rgba(...rgba: RGBAValues) {
+  let [ r, g, b, a ] = rgba;
+  if (a < 0) {
+    a = 0;
+  }
+  if ((a * 100) > 100) {
+    a = Math.min(a / 100, 1);
+  }
+  return `rgba(${r}, ${g}, ${b}, ${a})`;
 }
 
 function parseHexString(value: NumericValue): string {
   let a: string | string[];
   let b: string | string[];
   let c: string | string[];
-  [a] = getHex(value as NumericValue);
-  [a, ...b] = a.split('').slice(0, 2);
-  [b, ...c] = b.slice(0, 2);
+  [ a ] = parseHex(value as NumericValue);
+  [ a, ...b ] = a.split('').slice(0, 2);
+  [ b, ...c ] = b.slice(0, 2);
   return '';
 }
 
@@ -147,14 +226,12 @@ function hexToInt(value: NumericValue): number {
   return 0;
 }
 
-type RGBValues = [NumericValue, NumericValue, NumericValue];
-type RGBAValues = [NumericValue, NumericValue, NumericValue, NumericValue];
 
 function hexToRGB(hexValue: NumericValue): number[] {
-  return [0];
+  return [ 0 ];
 }
 
-export function rgbToHex(value: NumericValue | [NumericValue, NumericValue, NumericValue]): string {
+export function rgbToHex(value: NumericValue | [ NumericValue, NumericValue, NumericValue ]): string {
   let rgb = '';
   if (Array.isArray(value)) {
     console.log(`I'm an array.`, value);
