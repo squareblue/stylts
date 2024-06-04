@@ -5,7 +5,13 @@
     "build": "turbo build",
     "dev": "turbo dev",
     "lint": "turbo lint",
-    "format": "prettier --write \"**/*.{ts,tsx,md}\""
+    "format": "prettier --write \"**/*.{ts,tsx,md}\"",
+    "reset-deps:about": "echo '!!ATTENTION!! This script removes *all* npm and pnpm lock files and node_modules directories from *all* subdirectories.'",
+    "reset-deps": "which zsh && zsh -c 'rm -rf **/package-lock.json || ; rm -rf **/pnpm-lock.yaml || ; rm -rf  **/node_modules/ || ;'",
+    "delete-builds": "which zsh && zsh -c 'rm -rf **/dist/ || ; rm -rf  **/.turbo/ || ;'"
+  },
+  "dependencies": {
+    "change-case": "^5.4.4"
   },
   "devDependencies": {
     "@local/config-eslint": "workspace:*",
@@ -17,11 +23,5 @@
     "vite": "^5.2.10",
     "vitest": "^1.5.1"
   },
-  "packageManager": "pnpm@8.15.6",
-  "workspaces::disabled": [
-    "demos/**",
-    "docs",
-    "external",
-    "packages/**"
-  ]
+  "packageManager": "pnpm@8.15.6"
 }

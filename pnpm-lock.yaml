@@ -7,6 +7,10 @@ settings:
 importers:
 
   .:
+    dependencies:
+      change-case:
+        specifier: ^5.4.4
+        version: 5.4.4
     devDependencies:
       '@local/config-eslint':
         specifier: workspace:*

@@ -2,11 +2,13 @@
  * Utility functions and types. 🤔
  */
 import { NumericLiteral } from 'typescript';
-import { StyltsArgs } from './stylts';
+import { Stringable, StyltsArgs } from './stylts';
 
 export { kebabCase } from 'change-case';
 
-export type Whatever = unknown | never;
+export type Whatever = unknown | never | undefined;
+
+export type SplitValue = string | RegExp;
 
 // TODO: NEED TYPE FOR STRING THAT CONTAINS ONLY NUMBERS
 
@@ -60,7 +62,7 @@ export type HexNumber = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9;
 export type HexChar = HexLetter | HexNumber;
 
 export type AnyObject = {
-  [key: string]: Whatever;
+  [key: string | number | symbol]: Whatever;
 }
 
 export type AnyObjectMethods = {
@@ -78,7 +80,7 @@ export function isPlainObject(obj: unknown): boolean {
 }
 
 export function possiblyJSON(value: unknown): boolean {
-  return typeof value === 'string' && /^(\[|\{)/.test(value.trim());
+  return typeof value === 'string' && /^([\[{])/.test(value.trim());
 }
 
 export function getJSON(value: unknown): string {
@@ -101,6 +103,53 @@ export function arrayConcat(...values: (any | any[])): any[] {
   }
   return arr;
   // return [].concat(...values).flat(Infinity);
+}
+
+type StringConcatArgs = [
+  (Stringable | Stringable[]),
+  string?
+]
+
+export function stringConcat(...[strings, joiner = '']: StringConcatArgs): string {
+  return arrayConcat(strings).reduce((out, str) => {
+    out.push(String(str));
+    return out;
+  }, []).join(joiner);
+}
+
+type StringJoinArgs = [
+  (Stringable | Stringable[]),
+  string?,
+  (string | RegExp)?
+]
+
+export function stringJoin(...[
+  strings,
+  joiner = ' ',
+  splitter = ' '
+]: StringJoinArgs): string {
+  return stringConcat(strings, joiner).split(splitter).join(joiner);
+}
+
+function sortedObjectToMap(obj: {}) {
+  return Object.keys(obj).sort().reduce((out, key) => {
+    out.set(key, obj[key]);
+    return out;
+  }, new Map());
+}
+
+export function objectCompare(a_: {}, b_: {}) {
+  const a = sortedObjectToMap(a_);
+  const b = sortedObjectToMap(b_);
+  if (a.size !== b.size) {
+    return false;
+  }
+  if (JSON.stringify(a.keys()) === JSON.stringify(b.keys())) {
+    return (
+      JSON.stringify(a.values()) === JSON.stringify(b.values())
+    )
+  }
+  return false;
 }
 
 export function logWhat(...args: unknown[]): AnyObject {
@@ -170,20 +219,45 @@ export function randomString(len = 8, prefix = '') {
   return str;
 }
 
-export function randomId(opts) {
-  const {
-    partLen = 6,
-    partLength = partLen,
-    partCount = 2,
-    parts = partCount,
-    prefix = 'id',
-    sep = '-',
-  } = opts;
+type RandomIdOpts = {
+  partLen?: CharLength;
+  partLength?: CharLength;
+  partCount?: number;
+  parts?: number[];
+  prefix?: string;
+  sep?: string;
+} | [number, number];
+
+/**
+ * Generate a random id with optional prefix and separator
+ * @example randomId(); // -> 'id-edf73k-x-c4n7x6'
+ * @example randomId([3, 8]); // -> 'id-3984hu74-sdlk7434k-dfkjj48sh'
+ * @example randomId([2, 5], 'x', ''); // -> 'x1fg8d9gs6k'
+ * @param {Array<number, number> | Object} [$opts]
+ * @param {string} [$prefix]
+ * @param {string} [$sep]
+ * @returns {string}
+ */
+export function randomId($opts: RandomIdOpts, $prefix?: string, $sep?: string): string {
+  let partCount = 2;
+  let partLength = 6;
+  let prefix = $prefix ?? 'id';
+  let sep = $sep ?? '-';
+
+  if (Array.isArray($opts)) {
+    [ partCount = 2, partLength = 6 ] = $opts;
+  } else {
+    // let partLen, parts;
+    partCount = $opts.partCount ?? ($opts.parts != null ? $opts.parts[0] : partCount);
+    partLength = $opts.partLength ?? $opts.partLen ?? ($opts.parts != null ? $opts.parts[1] : partLength);
+    prefix = $opts.prefix ?? prefix;
+    sep = $opts.sep ?? sep;
+  }
 
   let idParts: string[] = [ prefix ];
-  let count = 0;
+  let counter = 0;
 
-  while (++count <= parts) {
+  while (++counter <= partCount) {
     idParts.push(randomString(partLength as CharLength));
   }
 
@@ -192,10 +266,18 @@ export function randomId(opts) {
   return idParts.join(sep);
 }
 
-export function toPath(path: string, obj = {}, value = {}) {
-  const parts = path.split('.');
+/**
+ * Convert a dot-notation object path to an actual object (with optional value)
+ * @param {string} path
+ * @param {Object} obj
+ * @param {*} value
+ * @param {string|RegExp} sep
+ */
+export function objectFromPath(path: string, obj: AnyObject = {}, value: any = {}, sep: SplitValue = '.') {
+  const parts = path.split(sep);
   const last = parts.pop() as string;
   const out = { ...obj };
+  // @ts-ignore - this is actually confusing
   parts.reduce((o, k) => {
     if (o[k] == null) return o[k] = {};
     // else...
@@ -204,12 +286,13 @@ export function toPath(path: string, obj = {}, value = {}) {
   return out;
 }
 
-export function dotPath(path: string, obj: AnyObject, value: any) {
+export function parseObjectPath(path: string, obj: AnyObject = {}, value: any = {}, sep: SplitValue = '.') {
   let out = obj;
-  let parts = String(path).split('.');
+  let parts = String(path).split(sep);
   let isLast = false;
   parts.forEach((k, i) => {
-    if ((isLast = (i < parts.length - 1))) {
+    isLast = (i < parts.length - 1)
+    if (isLast) {
       if (out[k] == null) {
         out[k] = {};
       } else if (!isPlainObject(out[k])) {

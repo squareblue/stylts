@@ -1,6 +1,6 @@
 // import fs from 'node:fs';
 import { snakeCase } from 'change-case';
-import tailwindClasses from './tailwind-classes.js';
+import tailwindClasses from '../tailwind-classes.js';
 
 function objectType(obj) {
   return Object.prototype.toString.call(obj);
@@ -53,7 +53,7 @@ function isPlainObject(obj) {
   //   return out;
   // }
 
-  function dotPath(path = '', obj = {}, value = {}) {
+  function splitObjectPath(path = '', obj = {}, value = {}) {
     let out = obj;
     let parts = String(path).split('.');
     parts.forEach((k, i) => {
@@ -63,6 +63,7 @@ function isPlainObject(obj) {
           out[k] = {};
         } else if (!isPlainObject(out[k])) {
           out[k] = { _: out[k] };
+          out[k] = { ['$' + k]: out[k] };
         } else {
           out[k] = out[k];
         }
@@ -82,10 +83,10 @@ function isPlainObject(obj) {
     return str.replace(/(-[a-z])/g, (match) => `$${match}`)
   }
 
-  function toDot(cls) {
+  function toDotted(cls) {
     const dotted = cls.split('-').map(part => {
       let out = part;
-      out = out.replace(/[./]/g, '_');
+      out = out.replace(/[./\s\W]/g, '_');
       out = out.replace(/^\d/, (match) => '$' + match);
       return out;
     }).join('.');
@@ -114,9 +115,9 @@ function isPlainObject(obj) {
     // if (/[./]/.test(cls)) {
     //   return;
     // }
-    return dotPath(
+    return splitObjectPath(
       // cls.replace(/[^a-z0-9/-]+/gi, '$').replace(/-/g, '.'),
-      toDot(cls),
+      toDotted(cls),
       // (cameled(cls.replace(/-\d/g, (match) => {
       //     const replaced = '.$' + match;
       //     // console.log(replaced);

@@ -1,5 +1,5 @@
 // Auto-generated file. Do not edit.
-const tailwindPropertiesA = {
+export const tailwindProperties = {
   "aspectAuto": "aspect-auto",
   "aspectVideo": "aspect-video",
   "aspectSquare": "aspect-square",

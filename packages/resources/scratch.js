@@ -71,7 +71,6 @@ import { isPlainObject } from '../dist/utils.js';
   }, {});
 
   console.log('res2', JSON.stringify(res2, null, 2));
-
   console.log(datas);
 
   function toObject(str, obj = {}, value) {
@@ -122,7 +121,6 @@ import { isPlainObject } from '../dist/utils.js';
   console.log(JSON.stringify(toObjectReduce('a.b.c.d.e.f.g', { z: 'foo' }), null, 2));
   console.log(JSON.stringify(toObjectWhile('a.b.c.d.e.f.g', {}, 12345), null, 2));
 
-
   // var data = [{ key: 'app.team.instance', value: 'some value1' },
   //   { key: 'app.team.server.obj', value: 'some value' },
   //   { key: 'app.team.app.some', value: 'some value' },
@@ -142,7 +140,6 @@ import { isPlainObject } from '../dist/utils.js';
   };
 
   console.log(result('app.team.instance', 234235));
-
 
   const keys = "details1.details2.details3.details4.details5"
   const firsName = "David";
@@ -171,7 +168,6 @@ import { isPlainObject } from '../dist/utils.js';
   }
 
   console.log(JSON.stringify(toPath('foo.bar.baz', foo), null, 2));
-
 
   function objectPathJS(path = '', obj = {}, value = {}) {
     let out = obj;

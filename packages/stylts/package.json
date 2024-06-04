@@ -2,25 +2,20 @@
   "name": "stylts",
   "version": "0.0.1",
   "type": "module",
-  "main": "./dist/stylts.cjs",
-  "module": "./dist/stylts.js",
-  "types": "./dist/stylts.d.ts",
+  "main": "main.ts",
+  "module": "main.ts",
   "exports": {
     ".": {
-      "import": "./src/stylts.ts",
-      "require": "./dist/stylts.cjs"
+      "import": "./src/stylts.ts"
     },
     "./utils": {
-      "import": "./src/utils.ts",
-      "require": "./dist/utils.cjs"
+      "import": "./src/utils.ts"
     },
     "./units": {
-      "import": "./src/units.ts",
-      "require": "./dist/units.cjs"
+      "import": "./src/units.ts"
     },
     "./properties": {
-      "import": "./src/properties.ts",
-      "require": "./dist/properties.cjs"
+      "import": "./src/properties.ts"
     }
   },
   "license": "MIT",

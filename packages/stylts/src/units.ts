@@ -3,18 +3,14 @@
  */
 import { arrayConcat, NumberRange } from './utils';
 import type {
-  ComputeRange,
+  // ComputeRange,
   // NumericStringIsLength,
   NumericValue,
 } from './utils';
-import { Property } from 'csstype';
-import Float = Property.Float;
 
 let undef: undefined;
 
 const unitTypes = [
-  '',
-  'pt',
   'px',
   'em',
   'rem',
@@ -22,13 +18,24 @@ const unitTypes = [
   'vw',
   'lh',
   'rlh',
+  'pt',
   'pct',
   '%',
+  ''
 ] as const;
 
 type UnitType = typeof unitTypes[number];
 
-type UnitValue = number | NumericValue;
+// type PxUnit = `${number}px`;
+// type PtUnit = `${number}pt`;
+// type EmUnit = `${number}em`;
+// type RemUnit = `${number}rem`;
+// type VhUnit = `${number}vh`;
+// type LhUnit = `${number}lh`;
+// type RlhUnit = `${number}rlh`;
+// type PctUnit = `${number}pct`;
+
+type UnitValue = number | string | NumericValue | '';
 type UnitValues = UnitValue[] | UnitValue[][];
 
 export function toUnit(value: UnitValues, unit: (UnitType | never) = ''): string {
@@ -46,11 +53,24 @@ export const lh = (...value: UnitValues) => toUnit(value, 'lh');
 export const rlh = (...value: UnitValues) => toUnit(value, 'rlh');
 export const pct = (...value: UnitValues) => toUnit(value, '%');
 
-class Unit {
-  value: UnitValues;
+export class Unit {
+  value: UnitValues = [1];
+  num: UnitValue | UnitValues = 1;
+  n: number | string | `${number}${UnitType | ''}` | "" | UnitValue[] | UnitValue[][];
 
   constructor(...value: UnitValues) {
     this.value = value;
+  }
+
+  u(...value: UnitValues | any) {
+    this.value = value == null ? [''] : value;
+    this.num = (
+      (value).length === 1
+        ? value[0]
+        : value.map((val: any) => Number(val))
+    ) as UnitValues | UnitValue;
+    this.n = this.num;
+    return this;
   }
 
   get px() {
@@ -97,6 +117,7 @@ class Unit {
 export function unit(...value: UnitValues) {
   return new Unit(...value);
 }
+export const u = unit().u;
 
 px.x0 = px(0);
 px.x5 = px(5);
@@ -225,7 +246,6 @@ function parseHexString(value: NumericValue): string {
 function hexToInt(value: NumericValue): number {
   return 0;
 }
-
 
 function hexToRGB(hexValue: NumericValue): number[] {
   return [ 0 ];

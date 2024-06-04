@@ -6,20 +6,14 @@ import {
   VendorProperties,
   VendorPropertiesHyphen,
 } from 'csstype';
-// import type { AnyObject, Whatever } from './utils';
-import * as utils from './utils';
-import * as properties from './properties';
+import type { AnyObject, Whatever } from './utils';
+import { arrayConcat } from './utils';
 import { px } from './units';
 
-export { utils, properties };
-
-// Re-export all style shortcut functions
+export * from './utils';
 export * from './fns';
-
-// Which utils methods do we need?
-const {
-  arrayConcat,
-} = utils;
+export * from './units';
+export * from './properties';
 
 export type Stringable = string | number;
 
@@ -45,7 +39,7 @@ export type StyltsArgs = [
   (StyltsPresets | undefined)
 ]
 
-function numericStyleValue(n: string | number | unknown): string {
+export function numericStyleValue(n: string | number | unknown): string {
   return typeof n === 'number' ? px(n) : String(n);
 }
 //
@@ -61,12 +55,12 @@ function numericStyleValue(n: string | number | unknown): string {
 //   return { margin: numericValues(value as NumericValue | NumericValue[]) as Property.Margin };
 // }
 //
-export function mX(n: number | string) {
-  return {
-    marginLeft: numericStyleValue(n) as Property.MarginLeft,
-    marginRight: numericStyleValue(n) as Property.MarginRight,
-  };
-}
+// export function mX(n: number | string) {
+//   return {
+//     marginLeft: numericStyleValue(n) as Property.MarginLeft,
+//     marginRight: numericStyleValue(n) as Property.MarginRight,
+//   };
+// }
 //
 // export function mY(n: number | string) {
 //   return {
@@ -114,7 +108,7 @@ function normalizeProperties(properties: StyleProperties) {
   return Object.entries(properties).reduce((style, [ prop, value ]) => {
     style[camelCase(prop)] = String(value);
     return style;
-  }, {});
+  }, {} as AnyObject);
 }
 
 // Ensures resolution of all CSS rules with camelCase property names
@@ -125,7 +119,7 @@ function resolveProperties(styleList: StyleProperties[]): Properties {
       normalizeProperties(style),
     );
     return resolved;
-  }, {});
+  }, {} as AnyObject);
 }
 
 // export const st = {
@@ -175,8 +169,16 @@ export class Stylts {
   }
   toAttribute = this.toString;
 
+  get attr() {
+    return this.toString();
+  }
+
   toCSS() {
-    return `{ ${this.toString()} }\n`
+    return `{ ${this.toString()} }\n`;
+  }
+
+  get css() {
+    return this.toCSS();
   }
 
 }
@@ -184,6 +186,8 @@ export class Stylts {
 type CSSStyleArg = string | string[] | StyleProperties | StyleProperties[];
 type CSSPresetsArg = StyltsPresets | undefined;
 
-export function css(style: CSSStyleArg, presets?: CSSPresetsArg): Stylts {
+export default function stylts(style: CSSStyleArg, presets?: CSSPresetsArg): Stylts {
   return new Stylts(style, presets);
 }
+// Alias
+export const css = stylts;
