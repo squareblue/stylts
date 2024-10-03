@@ -10,6 +10,9 @@
   "scripts": {
     "lint": "eslint \"**/*.ts\""
   },
+  "dependencies": {
+    "stylts": "*"
+  },
   "devDependencies": {
     "@local/config-eslint": "*",
     "@local/config-typescript": "*",

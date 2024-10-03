@@ -1,0 +1,4 @@
+#!/usr/bin/env zsh
+
+# This is such a hack. Or is it?
+which zsh && zsh -c 'rm -rf **/package-lock.json || ; rm -rf **/pnpm-lock.yaml || ; rm -rf  **/node_modules/ || ;'
