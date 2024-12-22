@@ -20,7 +20,7 @@ import { stylts, classes } from 'stylts';
 //   pseudo: (state) => `&:${state.replace(/^[&:]+/)}`
 // };
 
-function st(value)
+function st(value){}
 
 export function ThingsList({ items, style }) {
   const css = stylts({

@@ -1,14 +1,14 @@
-import stylts, { display, margin, mT, mX, pX, pY } from 'stylts';
+import stylts, { display, margin, mt, mx, pxl, pY } from 'stylts';
 // import { px, rem } from 'stylts/units';
 // import { display } from 'stylts/properties';
 
 export function Header({ title }: { title: string }) {
   const style = stylts([
-    mT(50),
-    pX(20),
+    mt(50),
+    pxl(20),
     pY(50),
     // @ts-ignore
-    mX('auto'),
+    mx.auto,
     display.inline,
     margin.top(40)
   ]);

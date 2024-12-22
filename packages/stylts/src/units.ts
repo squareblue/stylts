@@ -10,6 +10,8 @@ import type {
 
 let undef: undefined;
 
+export const auto = 'auto';
+
 const unitTypes = [
   'px',
   'em',
@@ -43,8 +45,8 @@ export function toUnit(value: UnitValues, unit: (UnitType | never) = ''): string
   return arrayConcat(value).join(suffix + ' ') + suffix;
 }
 
-export const px = (...value: UnitValues) => toUnit(value, 'px');
-export const pt = (...value: UnitValues) => toUnit(value, 'pt');
+export const pxl = (...value: UnitValues) => toUnit(value, 'px');
+export const pts = (...value: UnitValues) => toUnit(value, 'pt');
 export const em = (...value: UnitValues) => toUnit(value, 'em');
 export const rem = (...value: UnitValues) => toUnit(value, 'rem');
 export const vh = (...value: UnitValues) => toUnit(value, 'vh');
@@ -74,11 +76,11 @@ export class Unit {
   }
 
   get px() {
-    return px(...this.value);
+    return pxl(...this.value);
   }
 
   get pt() {
-    return pt(...this.value);
+    return pts(...this.value);
   }
 
   get em() {
@@ -119,11 +121,14 @@ export function unit(...value: UnitValues) {
 }
 export const u = unit().u;
 
-px.x0 = px(0);
-px.x5 = px(5);
-px.x10 = px(10);
-px.x20 = px(20);
-px.x40 = px(40);
+unit.px = pxl;
+unit.pt = pts;
+
+pxl.x0 = pxl(0);
+pxl.x5 = pxl(5);
+pxl.x10 = pxl(10);
+pxl.x20 = pxl(20);
+pxl.x40 = pxl(40);
 
 vh.full = vh(100);
 vw.full = vw(100);

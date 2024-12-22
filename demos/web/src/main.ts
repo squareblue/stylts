@@ -9,7 +9,7 @@ import { randomId, arrayConcat } from 'stylts/utils';
 import typescriptLogo from '/typescript.svg';
 import './style.css';
 
-const styleId = () => randomId({ parts: [2, 6], prefix: 'stl', sep: '-' });
+const styleId = () => randomId({ parts: [2, 8], prefix: 'st', sep: 'x' });
 
 function styleRule(selector: string | string[], properties: StyleProperties[]) {
   return `${arrayConcat(selector).join(' ')} { ${stylts(properties).toString()} }`;

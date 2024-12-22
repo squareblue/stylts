@@ -15,29 +15,29 @@ export default padding;
 export const padTop = padding.t = padding.top = (value: number | Property.PaddingTop ) => ({
   paddingTop: numericStyleValue(value),
 });
-export const pT = padTop;
+export const pt = padTop;
 
 export const padBottom = padding.b = padding.bottom = (value: number | Property.PaddingBottom ) => ({
   paddingBottom: numericStyleValue(value),
 });
-export const pB = padBottom;
+export const pb = padBottom;
 
 export const padLeft = padding.l = padding.left = (value: number | Property.PaddingLeft ) => ({
   paddingLeft: numericStyleValue(value),
 });
-export const pL = padLeft;
+export const pl = padLeft;
 
 export const padRight = padding.r = padding.right = (value: number | Property.PaddingRight ) => ({
   paddingRight: numericStyleValue(value),
 });
-export const pR = padRight;
+export const pr = padRight;
 
 // x axis
 export const padX = padding.x = (value: number | Property.Padding) => ({
   paddingLeft: numericStyleValue(value),
   paddingRight: numericStyleValue(value),
 });
-export const pX = padX;
+export const px = padX;
 
 // y axis
 export const padY = padding.y = (value: number | Property.Padding) => ({

@@ -8,7 +8,7 @@ import {
 } from 'csstype';
 import type { AnyObject, Whatever } from './utils';
 import { arrayConcat } from './utils';
-import { px } from './units';
+import { unit } from './units';
 
 export * from './utils';
 export * from './fns';
@@ -40,9 +40,9 @@ export type StyltsArgs = [
 ]
 
 export function numericStyleValue(n: string | number | unknown): string {
-  return typeof n === 'number' ? px(n) : String(n);
+  return typeof n === 'number' ? unit.px(n) : String(n);
 }
-//
+
 // function numericValues(n: string | NumericValue | NumericValue[]) {
 //   const out: string[] = [];
 //   for (const value of concatToArray(n)) {
@@ -55,14 +55,14 @@ export function numericStyleValue(n: string | number | unknown): string {
 //   return { margin: numericValues(value as NumericValue | NumericValue[]) as Property.Margin };
 // }
 //
-// export function mX(n: number | string) {
+// export function mx(n: number | string) {
 //   return {
 //     marginLeft: numericStyleValue(n) as Property.MarginLeft,
 //     marginRight: numericStyleValue(n) as Property.MarginRight,
 //   };
 // }
 //
-// export function mY(n: number | string) {
+// export function my(n: number | string) {
 //   return {
 //     marginTop: numericStyleValue(n) as Property.MarginTop,
 //     marginBottom: numericStyleValue(n) as Property.MarginBottom,
@@ -80,7 +80,7 @@ export function numericStyleValue(n: string | number | unknown): string {
 //   };
 // }
 //
-// export function pX(n: number | string) {
+// export function px(n: number | string) {
 //   return {
 //     paddingLeft: numericStyleValue(n) as Property.PaddingLeft,
 //     paddingRight: numericStyleValue(n) as Property.PaddingRight,
@@ -186,8 +186,9 @@ export class Stylts {
 type CSSStyleArg = string | string[] | StyleProperties | StyleProperties[];
 type CSSPresetsArg = StyltsPresets | undefined;
 
-export default function stylts(style: CSSStyleArg, presets?: CSSPresetsArg): Stylts {
+export function stylts(style: CSSStyleArg, presets?: CSSPresetsArg): Stylts {
   return new Stylts(style, presets);
 }
+export default stylts;
 // Alias
 export const css = stylts;

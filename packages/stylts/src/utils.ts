@@ -242,7 +242,7 @@ export function randomId($opts: RandomIdOpts, $prefix?: string, $sep?: string): 
   let partCount = 2;
   let partLength = 6;
   let prefix = $prefix ?? 'id';
-  let sep = $sep ?? '-';
+  let sep = $sep ?? '';
 
   if (Array.isArray($opts)) {
     [ partCount = 2, partLength = 6 ] = $opts;

@@ -1,9 +1,13 @@
 import { Property } from 'csstype';
-import { px } from './units';
+import { pxl } from './units';
 import { AnyObject, arrayConcat, NumericValue, Whatever } from './utils';
 
+export function important(value: string | NumericValue) {
+  return `${value} !important`
+}
+
 export function numericStyleValue(n: string | number | unknown): string {
-  return typeof n === 'number' ? px(n) : String(n);
+  return typeof n === 'number' ? pxl(n) : String(n);
 }
 
 export function numericValues(n: string | NumericValue | NumericValue[]) {
