@@ -11,12 +11,10 @@
     "lint": "eslint \"**/*.ts\""
   },
   "dependencies": {
-    "stylts": "*"
+    "stylts": "workspace:*"
   },
   "devDependencies": {
-    "@local/config-eslint": "*",
-    "@local/config-typescript": "*",
-    "eslint": "^8.57.0",
-    "typescript": "^5.4.5"
+    "@local/config-eslint": "workspace:*",
+    "@local/config-typescript": "workspace:*"
   }
 }

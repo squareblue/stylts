@@ -5,19 +5,19 @@
   "type": "module",
   "scripts": {
     "dev": "vite --clearScreen false",
-    "build": "tsc && vite build",
+    "build::disabled": "tsc && vite build",
     "preview": "vite preview",
     "lint": "eslint \"src/**/*.ts\""
   },
   "dependencies": {
-    "@local/ui": "*",
-    "stylts": "*"
+    "@local/ui": "workspace:*",
+    "stylts": "workspace:*"
   },
   "devDependencies": {
-    "@local/config-eslint": "*",
-    "@local/config-typescript": "*",
-    "eslint": "^8.57.0",
-    "typescript": "^5.4.5",
-    "vite": "^5.1.4"
+    "@local/config-eslint": "workspace:*",
+    "@local/config-typescript": "workspace:*",
+    "eslint": "~8.57.1",
+    "typescript": "~5.7.2",
+    "vite": "~5.4.11"
   }
 }
