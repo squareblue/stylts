@@ -9,7 +9,7 @@ class Flex {
   static get container() {
     return {
       display: 'flex',
-    };
+    } as const;
   }
 
   get container() {
@@ -19,7 +19,7 @@ class Flex {
   static get auto() {
     return {
       flex: 'auto',
-    };
+    } as const;
   }
 
   get auto() {
@@ -29,7 +29,7 @@ class Flex {
   static get initial() {
     return {
       flex: 'initial',
-    };
+    } as const;
   }
 
   get initial() {
@@ -112,29 +112,25 @@ flex.column = flexFlex.column;
 flex.itemsCenter = {
   ...display.flex,
   alignItems: 'center',
-};
+} as const;
 
 flex.justifyCenter = {
   ...display.flex,
   justifyContent: 'center',
-};
+} as const;
 
 flex.center = {
   x: {
     ...display.flex,
     justifyContent: 'center',
-  },
+  } as const,
   y: {
     ...display.flex,
     alignItems: 'center',
-  },
+  } as const,
   xy: {
     ...display.flex,
     alignItems: 'center',
     justifyContent: 'center',
-  },
-} as {
-  x: AnyObject,
-  y: AnyObject,
-  xy: AnyObject,
-};
+  } as const,
+} as const;
