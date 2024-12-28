@@ -44,19 +44,61 @@ export const pr = paddingRight;
 padding.r = paddingRight;
 padding.right = paddingRight;
 
-// x axis
-export const paddingX = (value: number | Property.Padding) => ({
-  paddingLeft: numericStyleValue(value),
-  paddingRight: numericStyleValue(value),
-});
+// x axis - supports separate values for left and right
+type PaddingXMulti =
+  | [Property.PaddingLeft, Property.PaddingRight]
+  | { left: Property.PaddingLeft, right: Property.PaddingRight }
+
+type PaddingX =
+  | Property.Padding
+  | PaddingXMulti
+
+export const paddingX = (value: PaddingX) => {
+  let leftValue = value as Property.PaddingLeft;
+  let rightValue = value as Property.PaddingRight;
+  if (Array.isArray(value)) {
+    [leftValue, rightValue] = value;
+  } else if (value.hasOwnProperty('left') && value.hasOwnProperty('right')) {
+    // @ts-ignore
+    leftValue = value.left;
+    // @ts-ignore
+    rightValue = value.right;
+  } else {
+    // there is no else.
+  }
+  return {
+    paddingLeft: numericStyleValue(leftValue),
+    paddingRight: numericStyleValue(rightValue),
+  }
+};
 export const px = paddingX;
 padding.x = paddingX;
 
-// y axis
-export const paddingY = (value: number | Property.Padding) => ({
-  paddingTop: numericStyleValue(value),
-  paddingBottom: numericStyleValue(value),
-});
+// y axis - supports separate values for top and bottom
+type PaddingYMulti =
+  | [Property.PaddingTop, Property.PaddingBottom]
+  | ({ top: Property.PaddingTop, bottom: Property.PaddingBottom })
+
+type PaddingY = Property.Padding | PaddingYMulti;
+
+export const paddingY = (value: PaddingY) => {
+  let topValue = value as Property.PaddingLeft;
+  let bottomValue = value as Property.PaddingRight;
+  if (Array.isArray(value)) {
+    [topValue, bottomValue] = value;
+  } else if (value.hasOwnProperty('top') && value.hasOwnProperty('bottom')) {
+    // @ts-ignore
+    topValue = value.top;
+    // @ts-ignore
+    bottomValue = value.bottom;
+  } else {
+    // there is no else.
+  }
+  return {
+    paddingTop: numericStyleValue(topValue),
+    paddingBottom: numericStyleValue(bottomValue),
+  }
+};
 export const py = paddingY;
 padding.y = paddingY;
 
