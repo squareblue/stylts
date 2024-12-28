@@ -20,8 +20,3 @@ export function numericValues(n: string | NumericValue | NumericValue[]) {
 
 // Hold preset values, using syntax similar to Tailwind(?)
 export const presets: AnyObject = {};
-
-// ============================================================
-// Display
-// ------------------------------------------------------------
-export const displayValue = (type: Property.Display) => ({ display: type });
