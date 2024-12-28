@@ -1,5 +1,5 @@
 import { camelCase, kebabCase } from 'change-case';
-import {
+import type {
   Properties,
   PropertiesHyphen,
   Property,
@@ -9,11 +9,6 @@ import {
 import type { AnyObject, Whatever } from './utils';
 import { arrayConcat } from './utils';
 import { unit } from './units';
-
-export * from './utils';
-export * from './fns';
-export * from './units';
-export * from './properties';
 
 export type Stringable = string | number;
 
@@ -38,10 +33,6 @@ export type StyltsArgs = [
   (string | StyleProperties | string[] | StyleProperties[]),
   (StyltsPresets | undefined)
 ]
-
-export function numericStyleValue(n: string | number | unknown): string {
-  return typeof n === 'number' ? unit.px(n) : String(n);
-}
 
 // function numericValues(n: string | NumericValue | NumericValue[]) {
 //   const out: string[] = [];
@@ -189,6 +180,12 @@ type CSSPresetsArg = StyltsPresets | undefined;
 export function stylts(style: CSSStyleArg, presets?: CSSPresetsArg): Stylts {
   return new Stylts(style, presets);
 }
-export default stylts;
+
 // Alias
 export const css = stylts;
+
+export default stylts;
+
+// export default function(style: CSSStyleArg, presets?: CSSPresetsArg) {
+//   return stylts(style, presets)
+// };

@@ -1,3 +1,5 @@
-export function Counter() {
-  return `<button id="counter" type="button"></button>`;
+export function Counter(counterButtonId: string) {
+  return (
+    `<button id="${counterButtonId}" type="button"></button>`
+  );
 }

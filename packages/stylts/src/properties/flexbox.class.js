@@ -120,8 +120,6 @@ class Flex {
   get flex1() {
     return this.add({ flex: '1 1 0%' });
   }
-  get _1() { return this.flex1; };
-  get [1]() { return this.flex1; };
 
   get initial() {
     return this.add({ flex: 'initial' });

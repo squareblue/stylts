@@ -1,8 +1,7 @@
-import { Header } from '@local/ui/header';
-import { Counter } from '@local/ui/counter';
-import { setupCounter } from '@local/ui/setup-counter';
-import stylts, { type StyleProperties, flex, border, rounded, bgColor } from 'stylts';
-import { m, margin, mxAuto, pad, padding } from 'stylts/properties';
+import { Header, Counter, setupCounter } from '@local/ui';
+import { mb, StyleProperties } from 'stylts';
+import stylts from 'stylts';
+import { m, p, flex, border, rounded, bgColor } from 'stylts/properties';
 import { pct, rem, vh, rgb, unit } from 'stylts/units';
 import { randomId, arrayConcat } from 'stylts/utils';
 
@@ -23,16 +22,16 @@ const _1_5 = unit(1.5);
   const styleElement = document.createElement('style');
 
   const _1 = unit(1);
-  const _2 = unit(2);
-  const _5 = unit(5);
+  const $2 = unit(2);
+  const $5 = unit(5);
   const $20 = unit(20);
 
   // styleElement.id = randomId({ partLength: 5, parts: 2, prefix: 'stylts-css', sep: '-'});
   styleElement.id = 'stylts-css';
 
   const wrapper = [
-    m(_2.rem),
-    pad($20.px),
+    m($2.rem),
+    p($20.px),
     { backgroundColor: 'cornflowerblue' },
     { color: rgb(255, 0, 64) },
   ];
@@ -51,6 +50,8 @@ const _1_5 = unit(1.5);
 
   document.head.insertAdjacentElement('beforeend', styleElement);
 
+  const counterButtonId = randomId({ prefix: 'id' });
+
   elem.innerHTML = `
   <div>
     <div id="${selectorId}">
@@ -62,14 +63,15 @@ const _1_5 = unit(1.5);
       </a>
       ${Header({ title: 'Web' })}
       <div class="card">
-        ${Counter()}
+        ${Counter(counterButtonId)}
       </div>
     </div>
   </div>
 `;
-})(document.querySelector('#app'));
 
-setupCounter(document.querySelector('#counter')!);
+  setupCounter(document.getElementById(counterButtonId)! as HTMLButtonElement);
+
+})(document.querySelector('#app'));
 
 // logWhat('string');
 // logWhat([ 1, 2, 3, 4, 5, 6 ]);
@@ -78,12 +80,12 @@ setupCounter(document.querySelector('#counter')!);
 
 console.log(stylts([
   // margin([rem(2), 10, rem(1), 20]),
-  mxAuto,
+  m.auto('y'),
   // @ts-ignore
-  margin.x.auto,
-  margin.top(rem(1)),
-  m.b(_1_5.rem),
-  padding(5),
+  m.x.auto,
+  m.top(rem(1)),
+  mb(_1_5.rem),
+  p(5),
   flex.center.xy,
   {
     width: pct.full,

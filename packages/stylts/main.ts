@@ -1,5 +1,9 @@
-import * as stylts from './src/stylts';
-import * as utils from './src/utils';
+export * from './src/stylts';
 
-export default stylts;
-export { stylts, utils };
+export * from './src/fns';
+export * from './src/units';
+export * from './src/properties';
+
+export * as utils from './src/utils';
+
+export { stylts as default } from './src/stylts';

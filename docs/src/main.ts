@@ -1,10 +1,11 @@
-import { Header } from "@local/ui/header";
-import "./style.css";
-import typescriptLogo from "/typescript.svg";
-import { Counter } from "@local/ui/counter";
-import { setupCounter } from "@local/ui/setup-counter";
+import { Header, Counter, setupCounter } from '@local/ui';
 
-document.querySelector<HTMLDivElement>("#app")!.innerHTML = `
+import typescriptLogo from '/typescript.svg';
+import './style.css';
+
+const counterButtonId = 'counter-button';
+
+document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
   <div>
     <a href="https://vitejs.dev" target="_blank">
       <img src="/vite.svg" class="logo" alt="Vite logo" />
@@ -12,11 +13,11 @@ document.querySelector<HTMLDivElement>("#app")!.innerHTML = `
     <a href="https://www.typescriptlang.org/" target="_blank">
       <img src="${typescriptLogo}" class="logo vanilla" alt="TypeScript logo" />
     </a>
-    ${Header({ title: "Docs" })}
+    ${Header({ title: 'Docs' })}
     <div class="card">
-      ${Counter()}
+      ${Counter(counterButtonId)}
     </div>
   </div>
 `;
 
-setupCounter(document.querySelector("#counter")! as HTMLButtonElement);
+setupCounter(document.getElementById(counterButtonId)! as HTMLButtonElement);

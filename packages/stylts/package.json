@@ -6,7 +6,7 @@
   "module": "main.ts",
   "exports": {
     ".": {
-      "import": "./src/stylts.ts"
+      "import": "./main.ts"
     },
     "./utils": {
       "import": "./src/utils.ts"
@@ -16,6 +16,9 @@
     },
     "./properties": {
       "import": "./src/properties.ts"
+    },
+    "./fns": {
+      "import": "./src/fns.ts"
     }
   },
   "license": "MIT",

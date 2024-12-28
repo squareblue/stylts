@@ -38,8 +38,8 @@ type MarginProperty = MarginLonghand | MarginShorthand;
 type MarginValue =
   | number
   | string
-  | Property.Margin
-  | (number | string | Property.Margin)[];
+  | MarginProperty
+  | (number | string | MarginProperty)[];
 
 export const margin = (...m: MarginValue[]): MarginShorthand => {
   return {
@@ -76,13 +76,9 @@ type MarginTopValue =
   | string
   | Property.MarginTop;
 
-type MarginTopProperty = {
-  marginTop: MarginTopValue
-}
-
 export const marginTop = m.t = margin.t = margin.top = (value: MarginTopValue) => ({
   marginTop: numericStyleValue(value),
-}) as MarginTopProperty;
+});
 
 // Tailwind-style naming
 export const mt = (v: MarginTopValue) => marginTop(v);
@@ -332,7 +328,8 @@ export const marginAuto = (...m: MarginAutoArgs): Margins => {
   return {}
 }
 
-export const mAuto = m.auto = margin.auto = (...m: MarginAutoArgs) => marginAuto(...m);
+export const mAuto = (...m: MarginAutoArgs) => marginAuto(...m);
+m.auto = margin.auto = mAuto;
 
 // export const mAuto = m.auto = margin.auto = {
 //   top: mt(auto),

@@ -1,6 +1,7 @@
-import { Property } from 'csstype';
-import { AnyObject, stringJoin } from '../utils';
-import { display, type StyleProperties } from '../stylts';
+import type { Property } from 'csstype';
+import type { StyleProperties } from '../stylts';
+import { stringJoin } from '../utils';
+import { display } from './display';
 
 // ============================================================
 // Flexbox
@@ -99,7 +100,7 @@ class Flex {
 }
 
 export function flex(...more: Property.Flex[] | undefined) {
-  return new Flex(...more)
+  return new Flex(...more);
 }
 
 const flexFlex = flex();
@@ -107,7 +108,7 @@ const flexFlex = flex();
 flex.row = flexFlex.row;
 
 flex.col = flexFlex.col;
-flex.column = flexFlex.column;
+flex.column = flexFlex.col;
 
 flex.itemsCenter = {
   ...display.flex,
